@@ -33,8 +33,9 @@ const getUserById = async(req, res = response ) => {
 const createUser = async(req, res = response) => {
     
     const { name, lastname, email, password, role } = req.body;
+    
     const user = new User({ name, lastname, email, password, role });
-
+    
     // Encriptar la contraseña
     const salt = bcryptjs.genSaltSync();
     user.password = bcryptjs.hashSync( password, salt );
@@ -58,7 +59,7 @@ const updateUser = async(req, res = response) => {
         resto.password = bcryptjs.hashSync( password, salt );
     }
 
-    const user = await User.findByIdAndUpdate( id, resto );
+    const user = await User.findByIdAndUpdate( id, resto, {new: true} );
 
     res.json(user);
 }

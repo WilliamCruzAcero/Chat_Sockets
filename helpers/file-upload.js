@@ -1,5 +1,5 @@
 const path = require('path');
-const {v4: uuidv4} = require('uuid');
+const { v4: uuidv4 } = require('uuid');
 
 const uploadFile = ( files, allowedExtensions = ['png', 'jpg', 'jpeg', 'gif'], folder = ''  ) => {
 
@@ -10,7 +10,7 @@ const uploadFile = ( files, allowedExtensions = ['png', 'jpg', 'jpeg', 'gif'], f
         const extension = cutName[ cutName.length - 1]
 
         // validar extensiones 
-        if ( !allowedExtensions.includes(extension)) {
+        if ( !allowedExtensions.includes( extension ) ) {
             return reject(`La extensión "${extension}", no es permitida - ${allowedExtensions}`);
         }
 

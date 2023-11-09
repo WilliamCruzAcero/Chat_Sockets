@@ -34,8 +34,8 @@ const createProduct = async(req, res = response ) => {
 
     const { status, user, ...body } = req.body;
 
-    const productDB = await Product.findOne({ name: body.name });
-
+    const productDB = await Product.findOne( {name: body.name.toUpperCase()} );
+    
     if ( productDB ) {
         return res.status(400).json({
             msg: `El producto ${ productDB.name }, ya existe`
@@ -80,7 +80,7 @@ const updateProduct = async( req, res = response ) => {
 const deleteProduct = async(req, res = response ) => {
 
     const { id } = req.params;
-    const productDeleted = await Producto.findByIdAndUpdate( id, { status: false }, {new: true });
+    const productDeleted = await Product.findByIdAndUpdate( id, { status: false }, {new: true });
 
     res.json({ productDeleted });
 }

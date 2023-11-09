@@ -27,7 +27,7 @@ const searchUsers = async( name = '', email = '', uid = '', res = response) => {
         $and: [{ status: true }]
     });
     
-    const usersCount = await User.count({
+    const usersCount = await User.countDocuments({
         $or: [{ name: regexName }, { email: regexEmail, }],
         $and: [{ status: true }]
     });
@@ -58,7 +58,7 @@ const searchProducts = async( name = '', uid = '', res = response) => {
                             .populate('category', 'name');
     
     // contador de Productos encontrados
-    const productsCount = await Product.count({ name: regexName, status: true })
+    const productsCount = await Product.countDocuments({ name: regexName, status: true })
                             
     res.json({
         results: {productsCount}, products
@@ -84,7 +84,7 @@ const searchCategory = async( name = '', uid = '', res = response) => {
     // buscar con nombre 
     const categories = await Category.find({ name: regexName, status: true })
                         .populate('user', 'name')
-    const categoryCounter = await Category.count({ name: regexName, status: true });
+    const categoryCounter = await Category.countDocuments({ name: regexName, status: true });
     
     res.json({
         results: {categoryCounter}, categories
@@ -110,7 +110,7 @@ const searchRoles = async( name = '', uid = '', res = response) => {
     // buscar con nombre 
     const roles = await Role.find({ name: regexName, status: true })
                         .populate('user', 'name');
-    const roleCounter = await Role.find({ name: regexName, status: true })
+    const roleCounter = await Role.countDocuments({ name: regexName, status: true })
                         
     res.json({
         results: {roleCounter}, roles

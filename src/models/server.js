@@ -1,22 +1,27 @@
 const express = require('express');
 const cors = require('cors');
 const fileUpload = require('express-fileupload');
+const { createServer } = require('http');
 
 const { dbConnection } = require('../../database/config');
 
-const {routerCategories} = require('../routes')
-const {routerLogin} = require('../routes')
-const {routerProducts} = require('../routes')
-const {routerRoles} = require('../routes')
-const {routerSearch} = require('../routes')
-const {routerUploads} = require('../routes')
-const { routerUsers } = require('../routes')
+const { routerCategories } = require('../routes')
+const { routerLogin } = require('../routes')
+const { routerProducts } = require('../routes')
+const { routerRoles } = require('../routes')
+const { routerSearch } = require('../routes')
+const { routerUploads } = require('../routes')
+const { routerUsers } = require('../routes');
+const { socketController } = require('../../socket/controller');
+
 
 class Server {
 
     constructor() {
         this.app  = express();
         this.port = process.env.PORT;
+        this.server = createServer( this.app );
+        this.io = require('socket.io')(this.server)
 
         this.paths = {
             categories: '/categories',
@@ -29,16 +34,19 @@ class Server {
         }
         
         // Conectar a base de datos
-        this.conectarDB();
+        this.connectDB();
 
         // Middlewares
         this.middlewares();
 
         // Rutas de mi aplicación
         this.routes();
+
+        // sockets
+        this.sockets();
     }
 
-    async conectarDB() {
+    async connectDB() {
         await dbConnection();
     }
 
@@ -72,8 +80,12 @@ class Server {
         this.app.use( this.paths.users, routerUsers );
     }
 
+    sockets() {
+        this.io.on('connection', ( socket ) => socketController( socket, this.io ));
+    }
+
     listen() {
-        this.app.listen( this.port, () => {
+        this.server.listen( this.port, () => {
             console.log('Servidor corriendo en puerto', this.port );
         });
     }

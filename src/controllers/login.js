@@ -55,49 +55,62 @@ const login = async(req, res = response) => {
 const googleSignin = async(req, res = response) => {
 
     const { id_token } = req.body;
-    
-    try {
-        const { email, name, image } = await googleVerify( id_token );
 
-        let user = await User.findOne({ correo });
+    try {
+        const { email, name, lastname, image } = await googleVerify( id_token );
+       
+        let user = await User.findOne( { email } );
+
         if ( !user ) {
-            // Tengo que crearlo
             const data = {
-                name,
-                email,
-                password: ':P',
-                image,
-                google: true
+               name,
+               lastname,
+               email,
+               password: ';p',
+               image,
+               google: true 
             };
 
-            user = new User( data );
+            user = new User( data ); 
             await user.save();
-        }
+        };
 
-        // Si el usuario en DB
-        if ( !user.status ) {
+        if ( !user.status ) { 
             return res.status(401).json({
-                msg: 'Hable con el administrador, usuario bloqueado'
+                msg: 'Usuario bloqueado, comuniquese con el administrardor.' 
             });
         }
 
         // Generar el JWT
-        const token = await generteJWT( user.id );
-        
+        const token = await generateJWT( user.id );
+
         res.json({
             user,
             token
         });
-        
-    } catch (error) {
 
+    } catch (error) {
         res.status(400).json({
             msg: 'Token de Google no es válido'
         })
     }
 }
 
+const renewToken = async( req, res = response ) => {
+
+    const { user } = req;
+
+    // Generar el JWT
+    const token = await generateJWT( user.id );
+    
+    res.json({
+        user,
+        token
+    })
+}
+
 module.exports = {
     login,
-    googleSignin
+    googleSignin,
+    renewToken
 }

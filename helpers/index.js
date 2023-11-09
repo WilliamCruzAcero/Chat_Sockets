@@ -3,7 +3,8 @@ const dbValidaters = require('./db-validaters');
 const fileUpload = require('./file-upload');
 const generateJWT = require('./generate-jwt');
 const googleVerify = require('./google-verify');
-const search = require('./search')
+const search = require('./search');
+const checkJWT = require('./checkJWT')
 
 module.exports = {
     ...allowedCollection,
@@ -12,4 +13,5 @@ module.exports = {
     ...generateJWT,
     ...googleVerify,
     ...search,
+    ...checkJWT
 }
