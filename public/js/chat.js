@@ -1,6 +1,6 @@
 const url = (window.location.hostname.includes('localhost') )
             ? 'http://localhost:8080/login'
-            : '#'
+            : 'https://curso-node-chat.onrender.com/login'
 
 let user = null;
 let socket = null;

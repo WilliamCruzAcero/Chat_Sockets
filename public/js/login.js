@@ -2,7 +2,7 @@ const myForm = document.querySelector('form')
 
 const url = (window.location.hostname.includes('localhost') )
 ? 'http://localhost:8080/login'
-: 'https://curso-node-chat.onrender.com/'
+: 'https://curso-node-chat.onrender.com/login'
 
 myForm.addEventListener('submit', ev => {
     ev.preventDefault();
