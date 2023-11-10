@@ -12,7 +12,7 @@ const socketController = async( socket = new Socket(), io ) => {
         return socket.disconnect();
     }
 
-    // Agregar usuario conctado
+    // Agregar usuario conectado
     chatMessage.connectUser( user );
     io.emit( 'active-users', chatMessage.usersArr );
     socket.emit( 'resive-message', chatMessage.last10 );
@@ -27,10 +27,11 @@ const socketController = async( socket = new Socket(), io ) => {
     })
 
     socket.on('send-message', ({ uid, message }) => {
-        const nameComplete = user.name + ' ' +user.lastname
+        const nameComplete = user.name + ' ' +user.lastname;
+        
         if ( uid ) {
             //mensaje chat privado
-            socket.to(uid).emit('private-message', { de: user.name, message });
+            socket.to(uid).emit('private-message', {nameComplete, message } )
         } else {
             // Mensaje chat comun
             chatMessage.sendMessage(user.id, nameComplete, message);

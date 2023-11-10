@@ -10,12 +10,13 @@ const txtUid = document.querySelector('#txtUid')
 const txtMessage = document.querySelector('#txtMessage')
 const ulUsers = document.querySelector('#ulUsers')
 const ulMessage = document.querySelector('#ulMessage')
+const ulPrivateChat = document.querySelector('#ulPrivateChat')
 const btnExit = document.querySelector('#btnExit')
 
 const validateJWT = async() => {
-
+    
     const token = localStorage.getItem( 'token') || '';
-
+    
     if ( token.length <= 10 ) {
         window.location = 'index.html';
         throw new Error('No hay token en el servidor');
@@ -51,12 +52,7 @@ const conectSoket = async() => {
 
     socket.on('resive-message', showMessage );
     socket.on('active-users',  showActiveUsers );
-
-    socket.on('private-message', (payload) => {
-        console.log('Privado:', payload)
-    })
-    
-
+    socket.on('private-message', showPrivateMessage);
 }
 
 const showActiveUsers = ( users = []) => {
@@ -95,6 +91,21 @@ const showMessage = ( message = []) => {
     ulMessage.innerHTML = messageHtml;
 }
 
+const showPrivateMessage = ( privateMessage = []) => {
+    
+    let messagePrivateHtml = `
+        <li>
+        <p>
+            <span class="text-primary"> ${ privateMessage.nameComplete }: </span>
+            <span class="fs-6 text-muted"> ${ privateMessage.message } </span>
+        </p>
+        </li>
+    `;
+    // console.log(messagePrivateHtml)
+    ulPrivateChat.innerHTML = messagePrivateHtml;
+}
+
+
 txtMessage.addEventListener('keyup', ( { keyCode } ) => {
     const message = txtMessage.value;
     const uid = txtUid.value;
@@ -105,6 +116,16 @@ txtMessage.addEventListener('keyup', ( { keyCode } ) => {
     socket.emit('send-message', { message, uid });
     txtMessage.value = ''
 })
+
+btnExit.addEventListener('click', logout );
+
+function logout() {
+    
+    alert(`Hasta luego`)
+    localStorage.removeItem("token")
+    window.location = '/'
+    
+}
 
 const main = async() => {
     
